@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "chargebee-integration": {
+      "source": "chargebee/ai",
+      "sourceType": "github",
+      "skillPath": "skills/chargebee-integration/SKILL.md",
+      "computedHash": "8b6933b1b2a266f41fa6b60d87106048a93f1f48312655bcbd8369e841fec8a3"
+    }
+  }
+}

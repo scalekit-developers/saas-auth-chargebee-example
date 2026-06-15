@@ -1,0 +1,16 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+package = "@netlify/plugin-nextjs"
+
+# Exclude URL environment variables from secrets scanning
+[context.production.environment]
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_APP_URL,SCALEKIT_REDIRECT_URI"
+
+[context.deploy-preview.environment]
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_APP_URL,SCALEKIT_REDIRECT_URI"
+
+[context.branch-deploy.environment]
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_APP_URL,SCALEKIT_REDIRECT_URI"
