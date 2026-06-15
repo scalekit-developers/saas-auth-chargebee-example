@@ -15,15 +15,8 @@ import {
   isChargebeeApiError,
 } from '@/lib/billing/chargebee-errors';
 import { canAutoSelectPaymentGateway } from '@/lib/billing/gateway-routing';
-import {
-  getHostedCheckoutCardOptions,
-  getPublicChargebeePublishableKey,
-  getPublicChargebeeSite,
-} from '@/lib/billing/hosted-checkout';
-import {
-  createCheckoutPaymentIntent,
-  getCheckoutVerificationAmountCents,
-} from '@/lib/billing/payment-intent';
+import { getHostedCheckoutCardOptions } from '@/lib/billing/hosted-checkout';
+import { getCheckoutVerificationAmountCents } from '@/lib/billing/payment-intent';
 import { getPlanByItemPriceId } from '@/lib/billing/plans';
 import { getChargebeeClient } from '@/lib/chargebee';
 import {
@@ -169,22 +162,16 @@ export async function POST(request: NextRequest) {
       const hostedPageUrl = result.hosted_page.url ?? '';
 
       if (!autoGateway) {
-        const paymentIntentId = await createCheckoutPaymentIntent({
-          customerId,
-          amountCents: verificationAmountCents,
-          currencyCode: itemPrice.item_price.currency_code ?? 'USD',
-        });
-
-        return NextResponse.json({
-          mode: 'embedded',
-          id: hostedPageId,
-          hostedPageId,
-          paymentIntentId,
-          chargebeeSite: getPublicChargebeeSite(),
-          chargebeePublishableKey: getPublicChargebeePublishableKey(),
-          successUrl,
-          subscriptionId: localSub.id,
-        });
+        return NextResponse.json(
+          {
+            error:
+              'Chargebee could not auto-select a payment gateway for hosted checkout. ' +
+              'Enable Smart Routing in Chargebee, or enable Chargebee Payment Components for this site before using the embedded checkout fallback.',
+            code: 'no_applicable_gateway',
+            hostedPageUrl,
+          },
+          { status: 409 }
+        );
       }
 
       return NextResponse.json({

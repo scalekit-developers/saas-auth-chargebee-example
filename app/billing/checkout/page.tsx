@@ -228,6 +228,25 @@ export default function BillingCheckoutPage() {
     scriptReady,
   ]);
 
+  const missingParams =
+    !hostedPageId ||
+    !paymentIntentId ||
+    !chargebeeSite ||
+    !publishableKey;
+
+  useEffect(() => {
+    if (missingParams || componentsReady || error) return;
+
+    const timeout = window.setTimeout(() => {
+      setError(
+        'Chargebee Payment Components did not finish loading. This feature is Early Access in Chargebee; enable Payment Components for this site, or enable Smart Routing and use hosted checkout.'
+      );
+      closePaymentComponents();
+    }, 12000);
+
+    return () => window.clearTimeout(timeout);
+  }, [closePaymentComponents, componentsReady, error, missingParams]);
+
   useEffect(() => {
     const runId = mountRunRef.current + 1;
     mountRunRef.current = runId;
@@ -237,12 +256,6 @@ export default function BillingCheckoutPage() {
       closePaymentComponents();
     };
   }, [closePaymentComponents, mountPaymentComponents]);
-
-  const missingParams =
-    !hostedPageId ||
-    !paymentIntentId ||
-    !chargebeeSite ||
-    !publishableKey;
 
   return (
     <AppShell active="billing">

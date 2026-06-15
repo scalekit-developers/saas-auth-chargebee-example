@@ -9,13 +9,13 @@ export async function POST(request: NextRequest) {
   try {
     const session = getSession();
     
-    // Get logout URL from Scalekit
     if (session?.tokens.id_token) {
       const client = getScalekitClient();
-      const postLogoutRedirectUri = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      const postLogoutRedirectUri =
+        process.env.SCALEKIT_POST_LOGOUT_REDIRECT_URI?.trim();
       const logoutUrl = client.getLogoutUrl({
         idTokenHint: session.tokens.id_token,
-        postLogoutRedirectUri,
+        ...(postLogoutRedirectUri ? { postLogoutRedirectUri } : {}),
       });
 
       // Clear session
