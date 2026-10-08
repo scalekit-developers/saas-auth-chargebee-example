@@ -2,6 +2,8 @@
 
 Org-mode billing demo: Scalekit FSA auth, auth webhooks → Chargebee customers, hosted checkout, Chargebee webhooks → local subscription sync.
 
+Scalekit provides auth and actions on behalf of users, with 500+ connectors and 20,000+ tools.
+
 ## Status
 
 - Plans 001–007: implemented
